@@ -21,7 +21,6 @@ This image shows a detailed stain at 40x zoom selected via the dropdown menu.
 
 ## Table of Contents
 * [Usage](#usage)
-* [Contributors](#contributors)
 * [Questions](#questions)
 * [License](#license)
 
