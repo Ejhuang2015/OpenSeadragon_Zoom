@@ -13,7 +13,7 @@
 <body>
 
 <div class="container">
-    <h1 class="center">Stains</h1>
+    <h1 class="center">OpenSeadragon Zoom Project</h1>
     <div id="osd" class="center" style="width: 800px; height: 600px;">
         <div class="zoomOverlay">
             <span class="zoomSliderContainer">
@@ -35,6 +35,7 @@
 
 <script src="/assets/scripts/openseadragon.min.js"></script>
 <script type="text/javascript">
+    //OpenSeadragon Viewer object
     var viewer = OpenSeadragon({
         id: "osd",
         prefixUrl: "https://learn.mghpathology.org/resources/assets/osd_icons/",
@@ -42,25 +43,24 @@
         minZoomPixelRatio: 2
     });
 
+    //Zoom Event Handler, Change the range slider position and select display
     viewer.addHandler('zoom', () => {
-        console.log(`ImageZoom: ${viewer.viewport.getZoom()}x`)
         let zoomValue = Math.round((viewer.viewport.getZoom() * 20) * 10) / 10;
-        console.log(`DisplayZoom: ${zoomValue}x`)
         document.querySelector("#zoomLevelPlaceholder").innerHTML = `${zoomValue}x`;
         document.querySelector("#zoomLevel").value = 0;
         document.querySelector("#zoomSliderRange").value = zoomValue;
     });
-
-    document.querySelector("#zoomSliderRange").addEventListener("change", function(e) {
-        viewer.viewport.zoomTo(this.value / 20);
-        document.querySelector("#zoomLevelPlaceholder").innerHTML = `${this.value}x`;
-    })
-    
+    //Select Dropdown, set the zoom level to the dropdown selection
     document.querySelector("#zoomLevel").addEventListener("change", function(e) {
         if (this.value != 0) {
             viewer.viewport.zoomTo(this.value);
         }
     });
+    //Range Slider Event Handler, set the zoom level based on the position of the range slider
+    document.querySelector("#zoomSliderRange").addEventListener("change", function(e) {
+        viewer.viewport.zoomTo(this.value / 20);
+        document.querySelector("#zoomLevelPlaceholder").innerHTML = `${this.value}x`;
+    })
 </script>
 
 </body>
