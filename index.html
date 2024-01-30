@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta
+      name="OpenSeadragon Zoom Project"
+      content="The task is to use the OpenSeadragon API and web standard technologies to create a widget that shows the zoom level and can be used to zoom to several preset levels (ones often found in microscope lenses)."
+    />
+    <title>OpenSeadragon Zoom Project</title>
+    <link rel="stylesheet" href="/assets/style/main.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="center">Stains</h1>
+    <div id="osd" class="center" style="width: 800px; height: 600px;">
+        <div class="zoomOverlay">
+            <span class="zoomSliderContainer">
+                <input type="range" min="1" max="2000" value="40" class="zoomSlider" id="zoomSliderRange">
+            </span>
+            <span class="zoomSwitchContainer">
+                <select name="zoomLevel" class="zoomSwitch" id="zoomLevel">
+                    <option value="0" hidden id="zoomLevelPlaceholder">0x</option>
+                    <option value="0.05">1x</option>
+                    <option value="0.2">4x</option>
+                    <option value="0.5">10x</option>
+                    <option value="1">20x</option>
+                    <option value="2">40x</option>
+                </select>
+            </span>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/scripts/openseadragon.min.js"></script>
+<script type="text/javascript">
+    var viewer = OpenSeadragon({
+        id: "osd",
+        prefixUrl: "https://learn.mghpathology.org/resources/assets/osd_icons/",
+        tileSources: "https://learn.mghpathology.org/pv-http/WSI22-98-Case-5_1.mrxs.dzi",
+        minZoomPixelRatio: 2
+    });
+
+    viewer.addHandler('zoom', () => {
+        console.log(`ImageZoom: ${viewer.viewport.getZoom()}x`)
+        let zoomValue = Math.round((viewer.viewport.getZoom() * 20) * 10) / 10;
+        console.log(`DisplayZoom: ${zoomValue}x`)
+        document.querySelector("#zoomLevelPlaceholder").innerHTML = `${zoomValue}x`;
+        document.querySelector("#zoomLevel").value = 0;
+        document.querySelector("#zoomSliderRange").value = zoomValue;
+    });
+
+    document.querySelector("#zoomSliderRange").addEventListener("change", function(e) {
+        viewer.viewport.zoomTo(this.value / 20);
+        document.querySelector("#zoomLevelPlaceholder").innerHTML = `${this.value}x`;
+    })
+    
+    document.querySelector("#zoomLevel").addEventListener("change", function(e) {
+        if (this.value != 0) {
+            viewer.viewport.zoomTo(this.value);
+        }
+    });
+</script>
+
+</body>
+</html>
